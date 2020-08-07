@@ -2,14 +2,15 @@ FROM ubuntu:16.04
 
 WORKDIR /root
 
-ENV PROJECT=$project ZONE=$zone
+ENV PROJECT=$project
+ENV ZONE=us-central1-a
 
-COPY ./setup.sh .
-RUN chmod +x ./setup.sh
+COPY ./setup.sh /tmp/setup.sh
+RUN chmod +x /tmp/setup.sh
 
-COPY ./teardown.sh .
-RUN chmod +x ./teardown.sh
-RUN echo "alias exit='./teardown.sh && exit'" >>~/.bashrc
+COPY ./teardown.sh /tmp/teardown.sh
+RUN chmod +x /tmp/teardown.sh 
+RUN echo "alias exit='/tmp/teardown.sh && exit'" >>~/.bashrc
 
 RUN apt-get update && apt-get -y install --no-install-recommends \
     curl vim bash-completion apt-transport-https ca-certificates gnupg
@@ -29,6 +30,8 @@ RUN echo 'alias k=kubectl' >>~/.bashrc
 RUN echo 'complete -F __start_kubectl k' >>~/.bashrc
 RUN echo "alias kn='k config set-context --current --namespace '" >>~/.bashrc
 
-# How to use it ###
-# BUILD: docker build -t qushot/ckad-sandbox:latest . 
-# RUN:   docker run -it -e PROJECT={{YOUR_PROJECT}} -e ZONE={{YOUR_ZONE}} --rm qushot/ckad-sandbox:latest /bin/bash
+CMD [ "/tmp/setup.sh" ]
+
+# For developer ###
+# BUILD: docker build -t qushot/ckad-sandbox:dev .
+# RUN:   docker run -it -e PROJECT={{YOUR_PROJECT}} --rm qushot/ckad-sandbox:dev
