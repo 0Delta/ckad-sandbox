@@ -24,12 +24,6 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 # Enable bash completion
 RUN echo 'source /usr/share/bash-completion/bash_completion' >>~/.bashrc
 
-#############
-RUN echo 'source <(kubectl completion bash)' >>~/.bashrc
-RUN echo 'alias k=kubectl' >>~/.bashrc
-RUN echo 'complete -F __start_kubectl k' >>~/.bashrc
-RUN echo "alias kn='k config set-context --current --namespace '" >>~/.bashrc
-
 CMD [ "/tmp/setup.sh" ]
 
 # For developer ###
